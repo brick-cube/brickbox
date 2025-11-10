@@ -11,13 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('companies', function (Blueprint $table) {
+        Schema::create('employees', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('company_id')->constrained()->onDelete('cascade');
+            $table->foreignId('project_id')->nullable()->constrained()->onDelete('set null');
             $table->string('name');
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
-            $table->string('address')->nullable();
-            $table->string('subscription_status')->default('inactive');
+            $table->string('role')->nullable();
+            $table->string('status')->default('active');
+            $table->date('joined_date')->nullable();
+            $table->text('remarks')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -28,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('companies');
+        Schema::dropIfExists('employees');
     }
 };

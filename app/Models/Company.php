@@ -11,6 +11,8 @@ class Company extends Model
         'email',
         'phone',
         'address',
+        'subdomain',
+        'color',
         'logo'
     ];
 

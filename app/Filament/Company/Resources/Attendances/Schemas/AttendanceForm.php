@@ -48,7 +48,9 @@ class AttendanceForm
                     DatePicker::make('date')
                         ->label('Date')
                         ->required()
-                        ->native(false),
+                        ->native(false)
+                        ->default(today())
+                        ->maxDate(today()),
 
                     Select::make('type')
                         ->label('Type')
@@ -66,15 +68,6 @@ class AttendanceForm
                             'half' => 'Half Day',
                         ])
                         ->default('full')
-                        ->required(),
-
-                    Select::make('status')
-                        ->label('Status')
-                        ->options([
-                            'present' => 'Present',
-                            'absent'  => 'Absent',
-                        ])
-                        ->default('present')
                         ->required(),
                 ]),
         ]);

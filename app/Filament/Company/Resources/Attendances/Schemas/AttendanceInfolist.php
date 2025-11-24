@@ -41,16 +41,6 @@ class AttendanceInfolist
                                 }
                             ]),
 
-                        TextEntry::make('status')
-                            ->label('Status')
-                            ->extraAttributes(fn ($state) => [
-                                'class' => match ($state) {
-                                    'present' => 'text-green-600 font-semibold',
-                                    'absent'  => 'text-red-600 font-semibold',
-                                    default => '',
-                                }
-                            ]),
-
                         TextEntry::make('created_at')
                             ->dateTime()
                             ->label('Created'),

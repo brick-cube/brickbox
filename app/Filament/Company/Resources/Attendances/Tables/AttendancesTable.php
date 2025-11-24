@@ -45,14 +45,6 @@ class AttendancesTable
                         'warning' => 'half',
                     ])
                     ->formatStateUsing(fn ($state) => ucfirst($state)),
-
-                BadgeColumn::make('status')
-                    ->label('Status')
-                    ->colors([
-                        'success' => 'present',
-                        'danger' => 'absent',
-                    ])
-                    ->formatStateUsing(fn ($state) => ucfirst($state)),
             ])
 
             ->filters([

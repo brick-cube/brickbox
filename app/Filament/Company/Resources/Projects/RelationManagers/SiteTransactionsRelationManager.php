@@ -2,6 +2,8 @@
 
 namespace App\Filament\Company\Resources\Projects\RelationManagers;
 
+use Filament\Actions\CreateAction;
+use Filament\Actions\EditAction;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
@@ -12,6 +14,7 @@ use Filament\Resources\RelationManagers\RelationManager;
 
 use Filament\Schemas\Schema;
 
+use Filament\Schemas\Components\Section;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\BadgeColumn;
@@ -22,86 +25,83 @@ class SiteTransactionsRelationManager extends RelationManager
 {
     protected static string $relationship = 'siteTransactions';
     protected static ?string $title = 'Site Transactions';
+    protected static bool $showOnView = true;
+    protected static bool $showCreateActionOnView = true;
+    protected static bool $canCreate = true;
 
-    /**
-     * Schema-based "form" for Create/Edit (returns Schema)
-     */
+
     public function form(Schema $schema): Schema
     {
         return $schema->components([
-            DatePicker::make('transaction_date')
-                ->label('Transaction Date')
-                ->required(),
+            Section::make('Transaction Details')
+                ->columnSpanFull()
+                ->columns(2)
+                ->schema([
 
-            Select::make('type')
-                ->label('Work Type')
-                ->options([
-                    'contract' => 'Contract',
-                    'sub work' => 'Sub Work',
-                    'coolie' => 'Coolie',
-                ])
-                ->required(),
+                    DatePicker::make('transaction_date')
+                        ->label('Transaction Date')
+                        ->default(today())
+                        ->maxDate(today())
+                        ->required(),
 
-            Select::make('category')
-                ->label('Category')
-                ->options([
-                    'receipt' => 'Receipt',
-                    'expense' => 'Expense',
-                    'labour' => 'Labour',
-                    'purchase' => 'Purchase',
-                ])
-                ->required(),
+                    Select::make('type')
+                        ->options([
+                            'contract' => 'Contract',
+                            'sub work' => 'Sub Work',
+                            'coolie' => 'Coolie',
+                        ])
+                        ->default('contract')
+                        ->required(),
 
-            Select::make('transaction_type')
-                ->label('Transaction Type')
-                ->options([
-                    'expense' => 'Expense',
-                    'receipt' => 'Receipt',
-                ])
-                ->required(),
+                    Select::make('category')
+                        ->options([
+                            'receipt' => 'Receipt',
+                            'expense' => 'Expense',
+                            'labour' => 'Labour',
+                            'purchase' => 'Purchase',
+                        ])
+                        ->default('receipt')
+                        ->required(),
 
-            Textarea::make('details')
-                ->label('Details')
-                ->nullable(),
+                    Select::make('transaction_type')
+                        ->options([
+                            'expense' => 'Expense',
+                            'receipt' => 'Receipt',
+                        ])
+                        ->default('expense')
+                        ->required(),
 
-            Textarea::make('description')
-                ->label('Description')
-                ->nullable(),
+                    Textarea::make('details')->nullable(),
+                    Textarea::make('description')->nullable(),
 
-            TextInput::make('cement_rate')
-                ->label('Cement Rate (₹)')
-                ->numeric()
-                ->reactive()
-                ->afterStateUpdated(
-                    fn($state, $set, $get) =>
-                    $set('cement_total_price', ($state * $get('cement_quantity')) ?: null)
-                ),
+                    TextInput::make('rate')
+                        ->numeric()
+                        ->reactive()
+                        ->afterStateUpdated(
+                            fn($state, $set, $get) =>
+                            $set('total_price', ($state * $get('quantity')) ?: null)
+                        ),
 
-            TextInput::make('cement_quantity')
-                ->label('Cement Quantity')
-                ->numeric()
-                ->reactive()
-                ->afterStateUpdated(
-                    fn($state, $set, $get) =>
-                    $set('cement_total_price', ($state * $get('cement_rate')) ?: null)
-                ),
+                    TextInput::make('quantity')
+                        ->numeric()
+                        ->reactive()
+                        ->afterStateUpdated(
+                            fn($state, $set, $get) =>
+                            $set('total_price', ($state * $get('rate')) ?: null)
+                        ),
 
-            TextInput::make('cement_total_price')
-                ->label('Cement Total Price')
-                ->numeric()
-                ->disabled()
-                ->dehydrated(true),
+                    TextInput::make('total_price')
+                        ->numeric()
+                        ->disabled()
+                        ->dehydrated(true),
 
-            TextInput::make('expense')
-                ->label('Expense Amount (₹)')
-                ->numeric()
-                ->nullable(),
-        ])->columns(2);
+                    TextInput::make('expense')
+                        ->numeric()
+                        ->required()
+                ]),
+        ]);
     }
 
-    /**
-     * Schema-based infolist (view record)
-     */
     public function infolist(Schema $schema): Schema
     {
         return $schema->components([
@@ -110,25 +110,20 @@ class SiteTransactionsRelationManager extends RelationManager
             ComponentsTextEntry::make('category')->label('Category'),
             ComponentsTextEntry::make('description')->label('Description'),
             ComponentsTextEntry::make('expense')->label('Expense'),
-            ComponentsTextEntry::make('cement_total_price')->label('Cement Total'),
+            ComponentsTextEntry::make('total_price')->label('Total'),
         ]);
     }
 
-    /**
-     * Table (uses Filament Tables API). Create action mutates form data to attach project/company.
-     */
     public function table(Table $table): Table
     {
         return $table
             ->columns([
                 TextColumn::make('transaction_date')
-                    ->label('Date')
                     ->date()
                     ->sortable()
                     ->searchable(),
 
                 BadgeColumn::make('type')
-                    ->label('Type')
                     ->colors([
                         'success' => 'contract',
                         'warning' => 'sub work',
@@ -137,7 +132,6 @@ class SiteTransactionsRelationManager extends RelationManager
                     ->searchable(),
 
                 BadgeColumn::make('category')
-                    ->label('Category')
                     ->colors([
                         'info' => 'receipt',
                         'danger' => 'expense',
@@ -146,36 +140,32 @@ class SiteTransactionsRelationManager extends RelationManager
                     ])
                     ->searchable(),
 
+                TextColumn::make('details')
+                    ->limit(30)
+                    ->searchable(),
+
                 TextColumn::make('description')
-                    ->label('Description')
                     ->limit(30)
                     ->searchable(),
 
                 TextColumn::make('expense')
-                    ->label('Expense')
                     ->money('INR')
                     ->sortable(),
 
-                TextColumn::make('cement_total_price')
-                    ->label('Cement Total')
+                TextColumn::make('total_price')
                     ->money('INR')
                     ->sortable(),
             ])
 
             ->filters([
-
-                // Filter by work type
                 SelectFilter::make('type')
-                    ->label('Work Type')
                     ->options([
                         'contract' => 'Contract',
                         'sub work' => 'Sub Work',
                         'coolie' => 'Coolie',
                     ]),
 
-                // Filter by category
                 SelectFilter::make('category')
-                    ->label('Category')
                     ->options([
                         'receipt' => 'Receipt',
                         'expense' => 'Expense',
@@ -183,41 +173,34 @@ class SiteTransactionsRelationManager extends RelationManager
                         'purchase' => 'Purchase',
                     ]),
 
-                // Filter by transaction_type (expense / receipt)
                 SelectFilter::make('transaction_type')
-                    ->label('Transaction Type')
                     ->options([
                         'expense' => 'Expense',
                         'receipt' => 'Receipt',
                     ]),
 
-                // Date Range Filter
                 Filter::make('transaction_date')
-                    ->label('Date Range')
                     ->form([
                         DatePicker::make('from'),
                         DatePicker::make('to'),
                     ])
-                    ->query(function ($query, array $data) {
+                    ->query(function ($query, $data) {
                         return $query
-                            ->when(
-                                $data['from'] ?? null,
-                                fn($q, $value) =>
-                                $q->whereDate('transaction_date', '>=', $value)
-                            )
-                            ->when(
-                                $data['to'] ?? null,
-                                fn($q, $value) =>
-                                $q->whereDate('transaction_date', '<=', $value)
-                            );
+                            ->when($data['from'] ?? null, fn($q, $v) =>
+                            $q->whereDate('transaction_date', '>=', $v))
+                            ->when($data['to'] ?? null, fn($q, $v) =>
+                            $q->whereDate('transaction_date', '<=', $v));
                     }),
             ])
 
             ->headerActions([
                 \Filament\Actions\CreateAction::make()
-                    ->mutateFormDataUsing(function (array $data) {
-                        $data['project_id'] = $this->ownerRecord->id;
-                        $data['company_id'] = Filament::auth()->user()->company_id;
+                    ->label('Add Transaction')
+                    ->modalHeading('Add Transaction')
+                    ->relationship(fn($livewire) => $livewire->getRelationship()) // required for view page
+                    ->mutateFormDataUsing(function ($data, $livewire) {
+                        $data['project_id'] = $livewire->ownerRecord->id;
+                        $data['company_id'] = \Filament\Facades\Filament::auth()->user()->company_id;
                         return $data;
                     }),
             ])

@@ -10,7 +10,11 @@ class LoginController extends Controller
 {
     public function show()
     {
-        return view('auth.login');
+        $tenant = session('tenant');
+
+        return view('auth.login', [ 
+            'tenant' => $tenant,
+        ]);
     }
 
     public function login(Request $request)

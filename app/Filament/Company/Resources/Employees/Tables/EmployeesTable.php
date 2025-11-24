@@ -20,7 +20,8 @@ class EmployeesTable
         return $table
             ->columns([
                 TextColumn::make('aadhar_number')
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(),
                 TextColumn::make('name')
                     ->searchable(),
                 TextColumn::make('email')

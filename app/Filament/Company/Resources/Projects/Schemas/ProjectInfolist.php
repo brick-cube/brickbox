@@ -13,13 +13,14 @@ class ProjectInfolist
     public static function configure(Schema $schema): Schema
     {
         return $schema->components([
-            
+
             Section::make('Project Details')
+                ->columnSpanFull()
                 ->schema([
 
                     Grid::make(2)
                         ->schema([
-                            
+
                             TextEntry::make('name')
                                 ->label('Project Name'),
 
@@ -28,8 +29,8 @@ class ProjectInfolist
 
                             TextEntry::make('type')
                                 ->label('Project Type')
-                                ->formatStateUsing(fn ($state) => $state ? ucfirst($state) : 'N/A')
-                                ->extraAttributes(fn ($state) => [
+                                ->formatStateUsing(fn($state) => $state ? ucfirst($state) : 'N/A')
+                                ->extraAttributes(fn($state) => [
                                     'class' => match ($state) {
                                         'residential' => 'inline-block px-2 py-0.5 rounded-full text-xs font-semibold text-white bg-blue-600',
                                         'commercial'  => 'inline-block px-2 py-0.5 rounded-full text-xs font-semibold text-white bg-sky-500',
@@ -40,8 +41,8 @@ class ProjectInfolist
 
                             TextEntry::make('status')
                                 ->label('Status')
-                                ->formatStateUsing(fn ($state) => $state ? ucfirst($state) : 'N/A')
-                                ->extraAttributes(fn ($state) => [
+                                ->formatStateUsing(fn($state) => $state ? ucfirst($state) : 'N/A')
+                                ->extraAttributes(fn($state) => [
                                     'class' => match ($state) {
                                         'started', 'foundation', 'structure' => 'inline-block px-2 py-0.5 rounded-full text-xs font-semibold text-white bg-green-600',
                                         'plastering', 'electrical and plumbing', 'flooring', 'painting' => 'inline-block px-2 py-0.5 rounded-full text-xs font-semibold text-white bg-yellow-500',

@@ -41,6 +41,9 @@ return [
 
     'debug' => (bool) env('APP_DEBUG', false),
 
+    'domain' => env('APP_DOMAIN', 'brickbox.local'),
+
+
     /*
     |--------------------------------------------------------------------------
     | Application URL

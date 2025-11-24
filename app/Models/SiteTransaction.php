@@ -15,9 +15,9 @@ class SiteTransaction extends Model
         'description',
         'category',
         'transaction_type',
-        'cement_rate',
-        'cement_quantity',
-        'cement_total_price',
+        'rate',
+        'quantity',
+        'total_price',
         'expense',
     ];
 

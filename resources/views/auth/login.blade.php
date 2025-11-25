@@ -22,7 +22,7 @@
 
 <body class="min-h-screen flex items-center justify-center p-4 text-white">
 
-    <div class="w-full max-w-md bg-black/80 backdrop-blur-xl border border-white/20 rounded-2xl p-8 shadow-2xl">
+    <div class="w-full max-w-md bg-black/80 backdrop-blur-xl border border-white/20 rounded-lg p-8 shadow-2xl">
 
         {{-- Branding --}}
         <div class="text-center mb-7">
@@ -67,13 +67,13 @@
                 <button type="button" onclick="togglePassword()"
                     class="absolute right-3 top-10 text-gray-300 hover:text-white transition"
                     id="toggleIcon">
-                    👁️
+                    😐
                 </button>
             </div>
 
             {{-- Forgot Password --}}
             <div class="text-right mb-6">
-                <a href="{{ url('/password/reset') }}" class="text-sm font-medium hover:underline"
+                <a href="{{ url('/forgot-password') }}" class="text-sm font-medium hover:underline"
                    style="color: {{ $color }}">
                     Forgot Password?
                 </a>
@@ -98,10 +98,10 @@
             const icon = document.getElementById("toggleIcon");
             if (input.type === "password") {
                 input.type = "text";
-                icon.textContent = "🙈";
+                icon.textContent = "😑";
             } else {
                 input.type = "password";
-                icon.textContent = "👁️";
+                icon.textContent = "😐";
             }
         }
     </script>

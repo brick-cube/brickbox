@@ -43,18 +43,18 @@
             <div class="mb-5">
                 <label class="block text-gray-200 mb-1 font-medium">Email</label>
                 <input type="email" name="email" required autofocus
-                       class="w-full px-4 py-3 rounded-lg bg-white/20 text-white border border-white/30
-                              placeholder-gray-300 focus:border-[{{ $color }}]"
-                       placeholder="you@example.com">
+                        class="w-full px-4 py-3 rounded-lg bg-white/20 text-white border border-white/30
+                            placeholder-gray-300 focus:border-[{{ $color }}]"
+                        placeholder="you@example.com">
             </div>
 
             {{-- New Password --}}
             <div class="mb-5 relative">
                 <label class="block text-gray-200 mb-1 font-medium">New Password</label>
                 <input type="password" id="password" name="password" required
-                       class="w-full px-4 py-3 pr-12 rounded-lg bg-white/20 text-white border border-white/30
-                              placeholder-gray-300 focus:border-[{{ $color }}]"
-                       placeholder="••••••••">
+                        class="w-full px-4 py-3 pr-12 rounded-lg bg-white/20 text-white border border-white/30
+                            placeholder-gray-300 focus:border-[{{ $color }}]"
+                        placeholder="••••••••">
                 <button type="button" onclick="togglePassword('password', 'eye1')"
                     class="absolute right-3 top-10 text-gray-300 hover:text-white transition"
                     id="eye1">😐</button>
@@ -64,9 +64,9 @@
             <div class="mb-6 relative">
                 <label class="block text-gray-200 mb-1 font-medium">Confirm Password</label>
                 <input type="password" id="password_confirmation" name="password_confirmation" required
-                       class="w-full px-4 py-3 pr-12 rounded-lg bg-white/20 text-white border border-white/30
-                              placeholder-gray-300 focus:border-[{{ $color }}]"
-                       placeholder="••••••••">
+                        class="w-full px-4 py-3 pr-12 rounded-lg bg-white/20 text-white border border-white/30
+                            placeholder-gray-300 focus:border-[{{ $color }}]"
+                        placeholder="••••••••">
                 <button type="button" onclick="togglePassword('password_confirmation', 'eye2')"
                     class="absolute right-3 top-10 text-gray-300 hover:text-white transition"
                     id="eye2">😐</button>

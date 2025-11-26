@@ -20,7 +20,7 @@ class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUserCircle;
 
     protected static ?string $recordTitleAttribute = 'name';
 
@@ -37,6 +37,38 @@ class UserResource extends Resource
     public static function table(Table $table): Table
     {
         return UsersTable::configure($table);
+    }
+
+    protected static function isSuperAdmin(): bool
+    {
+        $user = filament()->auth()->user();
+
+        return $user?->roles?->contains('name', 'super_admin') ?? false;
+    }
+
+    public static function canViewAny(): bool
+    {
+        return self::isSuperAdmin();
+    }
+
+    public static function canCreate(): bool
+    {
+        return self::isSuperAdmin();
+    }
+
+    public static function canEdit($record): bool
+    {
+        return self::isSuperAdmin();
+    }
+
+    public static function canDelete($record): bool
+    {
+        return self::isSuperAdmin();
+    }
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        return self::isSuperAdmin();
     }
 
     public static function getRelations(): array

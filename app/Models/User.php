@@ -9,6 +9,14 @@ use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use App\Models\Company;
 
+/**
+ * Class User
+ *
+ * @package App\Models
+ * @method bool hasRole(string|array $roles)
+ * @method bool assignRole(string|array $roles)
+ * @method bool hasPermissionTo(string $permission)
+ */
 
 class User extends Authenticatable
 {
